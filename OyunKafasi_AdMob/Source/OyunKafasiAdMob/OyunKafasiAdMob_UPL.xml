@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <!-- Read the App ID from Project Settings > Plugins > OyunKafasi AdMob.
+       Falls back to Google's official sample App ID for development/testing. -->
+  <setStringFromProperty
+      result="AdMobAppId"
+      ini="Engine"
+      section="/Script/OyunKafasiAdMob.OyunKafasiAdMobSettings"
+      property="AdMobAppId"
+      default="ca-app-pub-3940256099942544~3347511713" />
+
+  <buildGradleAdditions>
+    <insert>
+      dependencies {
+          implementation 'com.google.android.gms:play-services-ads:23.0.0'
+      }
+    </insert>
+  </buildGradleAdditions>
+
+  <androidManifestUpdates>
+    <addElements tag="application">
+      <meta-data
+          android:name="com.google.android.gms.ads.APPLICATION_ID"
+          android:value="$S(AdMobAppId)" />
+    </addElements>
+  </androidManifestUpdates>
+
+  <gameActivityImportAdditions>
+    <insert>
+      import com.google.android.gms.ads.MobileAds;
+      import com.google.android.gms.ads.initialization.InitializationStatus;
+      import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+      import com.google.android.gms.ads.AdRequest;
+      import com.google.android.gms.ads.LoadAdError;
+      import com.google.android.gms.ads.FullScreenContentCallback;
+      import com.google.android.gms.ads.AdError;
+      import com.google.android.gms.ads.interstitial.InterstitialAd;
+      import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+      import androidx.annotation.NonNull;
+      import android.util.Log;
+    </insert>
+  </gameActivityImportAdditions>
+
+  <gameActivityClassAdditions>
+    <insert>
+      private InterstitialAd mInterstitialAd;
+      private String mOyunKafasiAdUnitId;
+      private boolean mOyunKafasiAdMobInitialized = false;
+      private boolean mOyunKafasiAdLoading = false;
+
+      private void OyunKafasi_LoadInterstitial() {
+          if (mOyunKafasiAdUnitId == null || mOyunKafasiAdUnitId.isEmpty()) {
+              Log.e("OyunKafasi", "Interstitial Ad Unit ID is empty.");
+              return;
+          }
+
+          if (mOyunKafasiAdLoading || mInterstitialAd != null) {
+              return;
+          }
+
+          mOyunKafasiAdLoading = true;
+          AdRequest adRequest = new AdRequest.Builder().build();
+
+          InterstitialAd.load(_activity, mOyunKafasiAdUnitId, adRequest,
+              new InterstitialAdLoadCallback() {
+                  @Override
+                  public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                      mOyunKafasiAdLoading = false;
+                      mInterstitialAd = interstitialAd;
+                      Log.i("OyunKafasi", "Interstitial Ad Loaded Successfully.");
+                  }
+
+                  @Override
+                  public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                      mOyunKafasiAdLoading = false;
+                      mInterstitialAd = null;
+                      Log.e("OyunKafasi", "Failed to load Interstitial Ad: " + loadAdError.getMessage());
+                  }
+              });
+      }
+
+      public void AndroidThunkJava_InitAdMob(final String adUnitId) {
+          _activity.runOnUiThread(new Runnable() {
+              @Override
+              public void run() {
+                  mOyunKafasiAdUnitId = adUnitId;
+
+                  if (mOyunKafasiAdMobInitialized) {
+                      OyunKafasi_LoadInterstitial();
+                      return;
+                  }
+
+                  MobileAds.initialize(_activity, new OnInitializationCompleteListener() {
+                      @Override
+                      public void onInitializationComplete(InitializationStatus initializationStatus) {
+                          mOyunKafasiAdMobInitialized = true;
+                          Log.d("OyunKafasi", "AdMob Initialized.");
+                          OyunKafasi_LoadInterstitial();
+                      }
+                  });
+              }
+          });
+      }
+
+      public boolean AndroidThunkJava_IsInterstitialReady() {
+          return mInterstitialAd != null;
+      }
+
+      public void AndroidThunkJava_ShowInterstitial() {
+          _activity.runOnUiThread(new Runnable() {
+              @Override
+              public void run() {
+                  if (mInterstitialAd == null) {
+                      Log.d("OyunKafasi", "Interstitial Ad is not ready yet.");
+                      return;
+                  }
+
+                  final InterstitialAd adToShow = mInterstitialAd;
+                  mInterstitialAd = null;
+
+                  adToShow.setFullScreenContentCallback(new FullScreenContentCallback() {
+                      @Override
+                      public void onAdShowedFullScreenContent() {
+                          Log.d("OyunKafasi", "Interstitial Ad showed.");
+                      }
+
+                      @Override
+                      public void onAdDismissedFullScreenContent() {
+                          Log.d("OyunKafasi", "Interstitial Ad dismissed. Loading the next ad.");
+                          OyunKafasi_LoadInterstitial();
+                      }
+
+                      @Override
+                      public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                          Log.e("OyunKafasi", "Failed to show Interstitial Ad: " + adError.getMessage());
+                          OyunKafasi_LoadInterstitial();
+                      }
+                  });
+
+                  adToShow.show(_activity);
+              }
+          });
+      }
+    </insert>
+  </gameActivityClassAdditions>
+
+</root>

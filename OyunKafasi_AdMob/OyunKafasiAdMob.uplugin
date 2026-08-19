@@ -1,0 +1,28 @@
+{
+    "FileVersion": 3,
+    "Version": 2,
+    "VersionName": "1.1",
+    "FriendlyName": "OyunKafasi AdMob Plugin",
+    "Description": "An open-source Unreal Engine plugin for integrating Google AdMob Interstitial ads into Android projects without manually editing generated Android Studio files.",
+    "Category": "Advertising",
+    "CreatedBy": "Caner Celeksiz (Oyun Kafasi)",
+    "CreatedByURL": "https://oyunkafasi.com.tr",
+    "DocsURL": "https://github.com/canerceleksiz/OyunKafasiAdMob",
+    "MarketplaceURL": "",
+    "SupportURL": "",
+    "CanContainContent": false,
+    "IsBetaVersion": true,
+    "IsExperimentalVersion": false,
+    "Installed": false,
+    "Modules": [
+        {
+            "Name": "OyunKafasiAdMob",
+            "Type": "Runtime",
+            "LoadingPhase": "PreLoadingScreen",
+            "PlatformAllowList": [
+                "Android",
+                "Win64"
+            ]
+        }
+    ]
+}
