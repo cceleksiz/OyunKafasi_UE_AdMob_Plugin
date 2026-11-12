@@ -25,6 +25,11 @@ The plugin uses UPL (Unreal Plugin Language) to inject the required Android Grad
 5. If Unreal Engine prompts you to rebuild missing modules, click **Yes**.
 6. Go to `Edit -> Plugins` and make sure **OyunKafasi AdMob Plugin** is enabled.
 
+  If your project is Blueprint-only:
+   
+7. Add an empty C++ class (in UE: _Tools -> New C++ Class..._). 
+8. Right-click your `*.uproject` file and select _Generate Visual Studio project files_.
+
 ## Configuration
 
 Before packaging your Android application:
