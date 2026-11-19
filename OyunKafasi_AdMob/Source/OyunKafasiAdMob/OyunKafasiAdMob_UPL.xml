@@ -3,12 +3,14 @@
 
   <!-- Read the App ID from Project Settings > Plugins > OyunKafasi AdMob.
        Falls back to Google's official sample App ID for development/testing. -->
-  <setStringFromProperty
-      result="AdMobAppId"
-      ini="Engine"
-      section="/Script/OyunKafasiAdMob.OyunKafasiAdMobSettings"
-      property="AdMobAppId"
-      default="ca-app-pub-3940256099942544~3347511713" />
+  <init>
+    <setStringFromProperty
+        result="AdMobAppId"
+        ini="Engine"
+        section="/Script/OyunKafasiAdMob.OyunKafasiAdMobSettings"
+        property="AdMobAppId"
+        default="ca-app-pub-3940256099942544~3347511713" />
+  </init>
 
   <buildGradleAdditions>
     <insert>
@@ -19,11 +21,13 @@
   </buildGradleAdditions>
 
   <androidManifestUpdates>
-    <addElements tag="application">
-      <meta-data
-          android:name="com.google.android.gms.ads.APPLICATION_ID"
-          android:value="$S(AdMobAppId)" />
-    </addElements>
+    <!-- Required for advertising ID on Android 13+ (API 33) -->
+    <addPermission android:name="com.google.android.gms.permission.AD_ID"/>
+
+    <setElement result="AdMobAppIdMetadata" value="meta-data"/>
+    <addAttribute tag="$AdMobAppIdMetadata" name="android:name" value="com.google.android.gms.ads.APPLICATION_ID"/>
+    <addAttribute tag="$AdMobAppIdMetadata" name="android:value" value="$S(AdMobAppId)"/>
+    <addElement tag="application" name="AdMobAppIdMetadata"/>
   </androidManifestUpdates>
 
   <gameActivityImportAdditions>
@@ -51,7 +55,7 @@
 
       private void OyunKafasi_LoadInterstitial() {
           if (mOyunKafasiAdUnitId == null || mOyunKafasiAdUnitId.isEmpty()) {
-              Log.e("OyunKafasi", "Interstitial Ad Unit ID is empty.");
+              android.util.Log.e("OyunKafasi", "Interstitial Ad Unit ID is empty.");
               return;
           }
 
@@ -68,14 +72,14 @@
                   public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                       mOyunKafasiAdLoading = false;
                       mInterstitialAd = interstitialAd;
-                      Log.i("OyunKafasi", "Interstitial Ad Loaded Successfully.");
+                      android.util.Log.i("OyunKafasi", "Interstitial Ad Loaded Successfully.");
                   }
 
                   @Override
                   public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                       mOyunKafasiAdLoading = false;
                       mInterstitialAd = null;
-                      Log.e("OyunKafasi", "Failed to load Interstitial Ad: " + loadAdError.getMessage());
+                      android.util.Log.e("OyunKafasi", "Failed to load Interstitial Ad: " + loadAdError.getMessage());
                   }
               });
       }
@@ -95,7 +99,7 @@
                       @Override
                       public void onInitializationComplete(InitializationStatus initializationStatus) {
                           mOyunKafasiAdMobInitialized = true;
-                          Log.d("OyunKafasi", "AdMob Initialized.");
+                          android.util.Log.d("OyunKafasi", "AdMob Initialized.");
                           OyunKafasi_LoadInterstitial();
                       }
                   });
@@ -112,7 +116,7 @@
               @Override
               public void run() {
                   if (mInterstitialAd == null) {
-                      Log.d("OyunKafasi", "Interstitial Ad is not ready yet.");
+                      android.util.Log.d("OyunKafasi", "Interstitial Ad is not ready yet.");
                       return;
                   }
 
@@ -122,18 +126,18 @@
                   adToShow.setFullScreenContentCallback(new FullScreenContentCallback() {
                       @Override
                       public void onAdShowedFullScreenContent() {
-                          Log.d("OyunKafasi", "Interstitial Ad showed.");
+                          android.util.Log.d("OyunKafasi", "Interstitial Ad showed.");
                       }
 
                       @Override
                       public void onAdDismissedFullScreenContent() {
-                          Log.d("OyunKafasi", "Interstitial Ad dismissed. Loading the next ad.");
+                          android.util.Log.d("OyunKafasi", "Interstitial Ad dismissed. Loading the next ad.");
                           OyunKafasi_LoadInterstitial();
                       }
 
                       @Override
                       public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                          Log.e("OyunKafasi", "Failed to show Interstitial Ad: " + adError.getMessage());
+                          android.util.Log.e("OyunKafasi", "Failed to show Interstitial Ad: " + adError.getMessage());
                           OyunKafasi_LoadInterstitial();
                       }
                   });

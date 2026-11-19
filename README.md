@@ -1,4 +1,4 @@
-# OyunKafasi AdMob Plugin for Unreal Engine 5
+# OyunKafasi AdMob Plugin for Unreal Engine 5.8
 
 A simple, open-source Unreal Engine plugin for integrating Google AdMob Interstitial Ads into Android projects.
 
@@ -24,6 +24,11 @@ The plugin uses UPL (Unreal Plugin Language) to inject the required Android Grad
 4. Restart your Unreal Engine project.
 5. If Unreal Engine prompts you to rebuild missing modules, click **Yes**.
 6. Go to `Edit -> Plugins` and make sure **OyunKafasi AdMob Plugin** is enabled.
+
+  If your project is Blueprint-only:
+   
+7. Add an empty C++ class (in UE: _Tools -> New C++ Class..._). 
+8. Right-click your `*.uproject` file and select _Generate Visual Studio project files_.
 
 ## Configuration
 
@@ -82,7 +87,7 @@ When the player completes a level or dies:
 
 ## Requirements
 
-- Unreal Engine 5.5 or higher
+- Unreal Engine 5.8 or higher
 - Target Platform: Android
 - A valid Google AdMob App ID
 - A valid Interstitial Ad Unit ID
@@ -91,8 +96,9 @@ When the player completes a level or dies:
 
 This plugin currently focuses on Android Interstitial Ads. It does not yet provide Banner Ads, Rewarded Ads, App Open Ads, or Blueprint callbacks such as `OnAdLoaded` and `OnAdClosed`.
 
-## Support & Developer
+## Support & Developers
 
-Developed by Oyun Kafası.
-
+Developed by Oyun Kafası.  
 https://oyunkafasi.com.tr
+
+Updated to Unreal Engine 5.8 by [Viktor Brešan](https://github.com/vbresan).
