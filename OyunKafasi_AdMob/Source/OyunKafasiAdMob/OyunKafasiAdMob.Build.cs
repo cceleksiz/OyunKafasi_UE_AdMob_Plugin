@@ -27,6 +27,8 @@ public class OyunKafasiAdMob : ModuleRules
 
         if (Target.Platform == UnrealTargetPlatform.Android)
         {
+            PrivateDependencyModuleNames.Add("Launch");
+            
             string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
             AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "OyunKafasiAdMob_UPL.xml"));
         }

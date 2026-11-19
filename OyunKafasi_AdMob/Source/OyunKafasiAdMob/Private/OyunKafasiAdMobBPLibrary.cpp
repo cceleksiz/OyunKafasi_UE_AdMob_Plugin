@@ -17,7 +17,7 @@ void UOyunKafasiAdMobBPLibrary::InitAdMob(FString AdUnitID)
     {
         static jmethodID Method = FJavaWrapper::FindMethod(
             Env,
-            FJavaWrapper::GameActivityClassRef,
+            FJavaWrapper::GameActivityClassID,
             "AndroidThunkJava_InitAdMob",
             "(Ljava/lang/String;)V",
             false
@@ -40,7 +40,7 @@ bool UOyunKafasiAdMobBPLibrary::IsInterstitialAdReady()
     {
         static jmethodID Method = FJavaWrapper::FindMethod(
             Env,
-            FJavaWrapper::GameActivityClassRef,
+            FJavaWrapper::GameActivityClassID,
             "AndroidThunkJava_IsInterstitialReady",
             "()Z",
             false
@@ -63,7 +63,7 @@ void UOyunKafasiAdMobBPLibrary::ShowInterstitialAd()
     {
         static jmethodID Method = FJavaWrapper::FindMethod(
             Env,
-            FJavaWrapper::GameActivityClassRef,
+            FJavaWrapper::GameActivityClassID,
             "AndroidThunkJava_ShowInterstitial",
             "()V",
             false
